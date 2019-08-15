@@ -1,0 +1,58 @@
+<div ng-controller="MediumRoomCtrl" class="row" style="padding: 30px 30px 30px 30px">
+    <div class="col-2">
+        <div data-ng-include="'./views/profile.template.html'"></div>
+    </div>
+
+    <div class="col-10">
+          <div class="row">
+            <div class="col-12" style="text-align: center">
+                <img src="./lib/img/trofeu.png">
+                <h1>Parabéns!</h1>
+               
+                <br><br><br>
+                <!--
+                <span ng-click="restart()" class="btn btn-success" style="cursor: pointer">
+                  Restart
+                </span> 
+                -->
+            </div>
+          </div>
+
+        <div class="row" style="padding-top: 10px">
+                <div class="col-3"> <img src="./lib/img/ico_hit.png" style="height: 25px;padding-top: 4px">Total de acertos: {{resume.score.totalHits - resume.score.bonus}} pts</div>
+                <div class="col-3"><img src="./lib/img/ico_err.png" style="height: 25px;padding-top: 4px">Total de erros: - {{resume.score.totalErrors}} pts</div>
+                <div class="col-3"><img src="./lib/img/clock.png" style="height: 25px;padding-top: 4px">Bônus tempo: {{resume.score.bonus}}</div>
+                <div class="col-3"><img src="./lib/img/ico_mini_skip.png" style="height: 25px;padding-top: 4px">Questões Puladas: {{resume.skips}}</div>
+                <div class="col-3"><img src="./lib/img/ico_dica.png" style="height: 25px; padding-top: 4px">Penalidades(dicas): {{resume.score.panalites}} pts </div>
+
+        </div>
+         <div class="row" style="padding-top: 10px">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                                <img src="./lib/img/ico_rank.png">Ranking(momento) 
+                        </div>
+                        <div class="card-body">
+                            <div class="row" style="text-align: center">
+                                   <div class="col-12" style="text-align: center">
+                                                     
+                                            <ul class="list-group" ng-repeat="r in ranking track by $index" style="text-align: left" >
+                                                <li ng-if="user.mail != r.email"class="list-group-item list-group-item" style=""><span style="font-size: 12pt"  class="badge badge-primary badge-pill">{{r.position}}º</span>  {{r.name}} <span style="float: right">Pontos: {{r.score}}</span></li>
+                                                <li ng-if="user.mail == r.email" class="list-group-item list-group-item-success active" style="font-weight: bold"><span style="font-size: 12pt" class="badge badge-warning badge-pill">{{r.position}}º</span> {{r.name}} <span style="float: right">Pontos: {{r.score}}</li>
+                                               
+                                                
+                                            </ul>
+                                          </div>
+                                       
+                            </div>
+    
+    
+                        </div>
+                    </div>
+    
+                </div>
+            </div>
+
+    </div>
+
+</div>

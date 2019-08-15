@@ -1,0 +1,58 @@
+<div ng-controller="ReportCtrl" class="row" style="padding: 30px 30px 30px 30px">
+   <div class="col12" ng-repeat="r in reports track by $index">
+    
+    <div class="card text-center"  >
+        <div class="card-header">
+            <h1> Posição:{{$index + 1}} {{r.user.mail}}</h1>
+        </div>
+        <div class="card-body" style="text-align: left">
+          Respostas:
+          <table class="table table-bordered" >
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Questão(id)</th>
+                <th scope="col">Acerto</th>
+                <th scope="col">Tempo em segundos</th>
+                <th scope="col">Pulou</th>
+                <th scope="col">Dica Metricas</th>
+                <th scope="col">Dica refatoração sugerida</th>
+                <th scope="col">Dica Definição</th>                   
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="answer in r.answers track by $index">
+                  <td></td>
+                  <td>{{answer.question.id}}</td>
+                  <td>{{answer.correct}}</td>
+                  <td>{{answer.time}}</td>
+                  <td>{{answer.skip}}</td>
+                  <td>{{answer.tip2}}</td>
+                  <td>{{answer.tip3}}</td>
+                  <td>{{answer.tip1}}</td>
+              </tr>
+            </tbody>
+        </table>    
+
+
+
+        </div>
+        <div class="card-footer text-muted" style="text-align: left">
+            Total de acertos: {{r.score.totalHits}}<br>
+            Total de erros: {{r.score.totalErrors}}<br>
+            Bonus acertos consecutivos: {{r.score.bonusConsecutive}}<br>
+            Bonus tempo: {{r.score.bonus}}<br>
+            Penalidades por dicas solicitadas: {{r.score.panalites}}<br>
+            <h1>Total de pontos: {{r.score.score}}</h1>
+        
+        </div>
+      </div>
+     
+       <br><br><br>
+
+
+   </div>
+
+
+   
+</div>

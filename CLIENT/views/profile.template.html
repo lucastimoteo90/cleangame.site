@@ -1,0 +1,63 @@
+<div ng-controller="ProfileCtrl" style="background-color: #FCFCFC; padding: 10px 10px 10px 10px">
+  <div class="row">
+   <div class="col-12" style="text-align: center">
+        <i style="cursor: pointer; padding-top: 30px" class="material-icons md-100">
+                account_circle
+        </i><br>
+       
+   </div>
+  </div>
+
+  <div class="row" style="font-size: 10pt">
+   <div class="col-12">
+         <span style="font-weight: bold">
+              Bem vindo!
+         </span>
+         {{user.name}} 
+   </div>
+  </div>
+  <div class="row">
+        <div class="col-12">
+            <span style="font-weight: bold;  font-size: 10pt">
+                        Senha:
+            </span>
+            <span style="cursor: pointer ;color:#488AFF; font-size: 10pt">
+                (clique aqui para alterar)
+            </span>
+            
+        </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+        <br>
+        <h2><img src="./lib/img/chat.png" style="width: 30px"> Chat:</h2>
+        <div id="console" class="well" style="font-size: 8pt; white-space: normal" ng-bind-html="consoleChat"> </div>
+       <form class="well form-inline" onsubmit="return false;">
+        <input ng-model="sendMsg"  class="input-xlarge" type="text" placeholder="Type something..."/>
+        <button type="button" ng-click="sendChatMensage(sendMsg)" class="btn" id="send">Send</button>                           
+      </form>
+    </div>
+</div>
+  <!--
+  <div class="row">   
+    <div class="col-12" style="text-align: center"><br><br>
+            <img src="./lib/img/ico_rank.png">Ranking(momento)  
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-success">1º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">2º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">3º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">4º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">5º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">6º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">7º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">8º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">9º Lucas Pts 100</li>
+        <li class="list-group-item list-group-item-success">10º Lucas Pts 100</li>
+  
+   </ul>
+  </div>
+</div>
+-->
+
+    
+</div>

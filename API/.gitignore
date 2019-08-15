@@ -1,0 +1,5 @@
+/.metadata/
+target/
+cleangame/
+repsgit/
+src/main/resources/application.properties

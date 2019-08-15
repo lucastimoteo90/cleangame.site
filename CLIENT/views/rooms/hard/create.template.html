@@ -1,0 +1,177 @@
+<div class="row" ng-controller="HardRoomCtrl">
+    <div class="col-2">
+        <div data-ng-include="'./views/profile.template.html'"></div>
+    </div>
+    <div class="col-10">
+        <div class="card">
+            <div class="card-header">
+                <h1>{{ label.newHardRoomTitle }}</h1>
+
+                <ul class="nav nav-tabs card-header-tabs" style="cursor: pointer">
+                    <li class="nav-item" ng-click="moveRoomTab()">
+                        <span class="nav-link" ng-class="{'active' : step1}">Room</span>
+                    </li>
+                    <li class="nav-item" ng-click="moveQuestionsTab()">
+                        <span class="nav-link" ng-class="{'active' : step2}">New Questions</span>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="card-body">
+
+                <form ng-if="step1">
+                    <div class="form-group">
+                        <label for="InputNameRoom">{{label.nameRoom}}:</label>
+                        <input ng-model="room.name" type="text" class="form-control" id="InputNameRoom" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputDescriptionRoom">{{ label.descriptionRoom }}:</label>
+                        <textarea ng-model="room.description" type="text" class="form-control" id="InputDescriptionRoom"
+                            aria-describedby="emailHelp" placeholder=""></textarea>
+                        <small id="InputDescriptionRoom" class="form-text text-muted">{{label.descriptionHelp}}</small>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <input ng-model="room.public" type="checkbox" class="form-check-input" id="isPublicRoom">
+                        <label class="form-check-label" for="isPublicRoom">{{label.isPublicRoom}}</label>
+                    </div>
+                    
+
+                   
+                    <a href="#" ng-click="createRoom(room)" class="btn btn-success">
+                        {{label.btnCreateRoom}}
+                    </a>
+
+                </form>
+                <div ng-if="step2">
+                    
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                            Questions:     
+                            <div class="btn-group mr-2" role="group" aria-label="First group" ng-repeat="question in questionsList track by $index" >
+                                  <button type="button" class="btn btn-secondary" >{{$index + 1}}</button>                              
+                            </div>                    
+                           
+                    </div>
+
+                    <div class="form-group">
+
+                            <br>
+                                     
+                        <a href="#" ng-click="newQuestion()" class="btn btn-danger" style="float: left">
+                                {{label.btnRmQuestion}}
+                        </a>
+
+                        <a href="#" ng-click="newQuestion()" class="btn btn-primary" style="float: left">
+                                {{label.btnNewQuestion}}
+                        </a>
+                         
+                        <a href="#" ng-click="saveCode()" class="btn btn-success" style="float: right">
+                                {{label.saveCode}}
+                        </a>
+                       
+                        <br><br>
+
+                        <label for="InputDescriptionRoom">{{label.newQuestion}}:</label>
+
+                        <code-mirror container="codeMirror"  theme='tomorrow-night-eighties'  line-numbers="true"></code-mirror>
+                        <small id="InputDescriptionRoom" class="form-text text-muted">{{label.questionHelp}}</small>            
+
+                    </div>
+
+                    <div class="form-row">
+                        <div class="col-auto my-1">
+                             <label for="InputTypeBadsmell" class="mr-sm-2"> enter badsmell type and line:</label>
+                             <select ng-model="question.codeBadSmell.badsmell" id="InputTypeBadsmell"
+                                class="custom-select mr-sm-10">
+                                <option ng-repeat="badsmell in badsmells track by $index" ng-value="{{badsmell.id}}" >{{badsmell.name}}</option>
+                            </select>
+                        </div>
+                        <div class="col-auto my-1">
+                            <label for="InputStartBadsmellLine" class="mr-sm-2"> Start line:</label>                           
+                            <input ng-model="question.codeBadSmell.startline" id="InputStartBadsmellLine" class="custom-select mr-sm-10" type="number">
+                        </div>
+                        <div class="col-auto my-1">
+                                <label for="InputEndBadsmellLine" class="mr-sm-2"> End line:</label>                           
+                                <input ng-model="question.codeBadSmell.endline" id="InputEndBadsmellLine" class="custom-select mr-sm-10" type="number">
+                        </div>
+
+                        <div class="col-auto my-1">
+                            <a href="#" ng-click="addBadsmell()" class="btn btn-success">
+                               +
+                            </a>  
+                        </div>        
+
+                    </div>
+                    <div><br>
+                        <h2>Smells this question:</h2>
+                        <table class="table">
+                            <tr>
+                                <th>Badsmell</th>
+                                <th>Start line</th>
+                                <th>End line</th>
+                                <th>Remove</th>
+                            </tr>
+                            <tr ng-repeat="smell in questionsSmells track by $index" >
+                                <th>{{smell.badsmell.name}}</th>
+                                <th>{{smell.startline}}</th>
+                                <th>{{smell.endline}}</th>
+                                <th>
+                                    <a href="#" ng-click="rmBadsmell(smell)" class="btn btn-danger">
+                                    -
+                                    </a> 
+                               </th>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+                <div ng-if="step3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1>File: {{FilenameValid}}</h1>
+                            <h2>Badsmell identificado: {{ badsmellID }}</h2>
+                            <h2>Linhas: {{ badsmellLinha }}</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-2">
+                            <div class="row">
+                                <div class="col-6">
+                                    <button class="btn btn-danger" ng-click="invalidaQuestion()">Rejeitar</button>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-success" ng-click="validaQuestion()">Aprovar</button>
+                                </div>
+                            </div>
+                            <div class="row" style="height: 500px; overflow: auto;">
+
+
+                                <ul class="list-group" ng-repeat="quest in questionsFValids track by $index"
+                                    style="text-align: left">
+                                    <div style="cursor: pointer" ng-click="carregarQuestions(quest)"> <b>Arquivo:
+                                            {{$index}}</b>
+                                        <div> {{quest.filename}}</div>
+                                        <div ng-if="quest.valid" style="color: green">Validated</div>
+                                        <div ng-if="!quest.valid" style="color: red">Invalidated</div>
+                                        <br><br>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="col-10">
+                            <div id="sourcecode"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--FECHA CARD //-->
+
+        <br><br>
+
+    </div>
+</div>

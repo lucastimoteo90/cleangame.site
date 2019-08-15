@@ -1,0 +1,104 @@
+<div class="row" ng-controller="MediumRoomCtrl">
+    <div class="col-2">
+        <div data-ng-include="'./views/profile.template.html'"></div>
+    </div>
+    <div class="col-10">
+        <div class="card">
+            <div class="card-header">
+                <h1>{{ label.newEasyRoomTitle }}</h1>
+                
+                <ul class="nav nav-tabs card-header-tabs" style="cursor: pointer">
+                        <li class="nav-item" ng-click="moveRoomTab()">
+                            <span class="nav-link" ng-class="{'active' : step1}">Room</span>
+                        </li>
+                        <li class="nav-item" ng-click="moveQuestionsTab()">
+                            <span class="nav-link" ng-class="{'active' : step2}">Status</span>
+                        </li>
+                        <li class="nav-item" ng-click="moveValidationTab()">
+                            <span class="nav-link" ng-class="{'active' : step3}">Validation</span>
+                        </li>
+                    </ul>
+            </div>
+            <div class="card-body">
+
+                <form ng-if="step1">
+                    <div class="form-group">
+                        <label for="InputNameRoom">{{label.nameRoom}}:</label>
+                        <input ng-model="room.name" type="text" class="form-control" id="InputNameRoom" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="InputDescriptionRoom">{{ label.descriptionRoom }}:</label>
+                        <textarea ng-model="room.description" type="text" class="form-control" id="InputDescriptionRoom" aria-describedby="emailHelp"
+                            placeholder=""></textarea>
+                        <small id="InputDescriptionRoom" class="form-text text-muted">{{label.descriptionHelp}}</small>
+                    </div>
+
+                    <div class="form-group">
+                            <label for="InputGitRoom">{{label.git}}:</label>
+                            <input ng-model="room.git" type="text" class="form-control" id="InputGitRoom" placeholder="">
+                    </div>
+
+                    <div class="form-group form-check">
+                        <input ng-model="room.public" type="checkbox" class="form-check-input" id="isPublicRoom">
+                        <label class="form-check-label" for="isPublicRoom">{{label.isPublicRoom}}</label>
+                    </div>
+
+                   
+                    <a href="#" ng-click="createRoom(room)" class="btn btn-success">
+                        {{label.btnCreateRoom}}
+                    </a>
+
+                </form>
+                <div ng-if="step2">
+                   <h2>Clonagem: {{ cloneStatus }}</h2>
+                   <h2>Análise PMD:{{ pmdStatus }}</h2>
+                   <h2>Criação Questões:{{ makeQuestionStatus }}</h2>
+                </div>             
+                
+                <div ng-if="step3">
+                    <div class="row">
+                        <div class="col-12">
+                            <h1>File: {{FilenameValid}}</h1>
+                            <h2>Badsmell identificado: {{ badsmellID }}</h2>
+                            <h2>Linhas: {{ badsmellLinha }}</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                       
+                       <div class="col-2">
+                          <div class="row">
+                              <div class="col-6">
+                                    <button class="btn btn-danger" ng-click="invalidaQuestion()">Rejeitar</button>
+                              </div>
+                              <div class="col-6">
+                                    <button class="btn btn-success" ng-click="validaQuestion()">Aprovar</button>
+                              </div>
+                          </div>
+                          <div class="row" style="height: 500px; overflow: auto;">
+                         
+                          
+                          <ul class="list-group" ng-repeat="quest in questionsFValids track by $index" style="text-align: left" >
+                                <div style="cursor: pointer" ng-click="carregarQuestions(quest)" > <b>Arquivo: {{$index}}</b> 
+                                        <div> {{quest.filename}}</div>
+                                        <div ng-if="quest.valid" style="color: green">Validated</div>
+                                        <div ng-if="!quest.valid" style="color: red">Invalidated</div>
+                                        <br><br>
+                                </div>
+                          </ul>
+                        </div>
+                       </div>
+
+                       <div class="col-10">
+                            <div id="sourcecode"></div>
+                          </div>
+                   </div> 
+                 </div>             
+
+            </div>
+        </div>
+        <!--FECHA CARD //-->
+
+      <br><br>
+
+    </div>
+</div>
