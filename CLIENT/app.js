@@ -69,7 +69,7 @@ app.directive('codeMirror', ['$timeout', function($timeout) {
 
 
 
-local = true;
+local = false;
 
 if(local){
   app.constant('ApiPath', "http://localhost:8080");
@@ -77,10 +77,10 @@ if(local){
   app.constant('SocketPort', "2000");
   app.constant('Domain', "localhost");
 }else{
-  app.constant('ApiPath', "http://ec2-52-67-255-100.sa-east-1.compute.amazonaws.com:8080");
-  app.constant('SocketServer', "http://ec2-52-67-255-100.sa-east-1.compute.amazonaws.com");
+  app.constant('ApiPath', "http://cleangame.site:8080");
+  app.constant('SocketServer', "http://cleangame.site");
   app.constant('SocketPort', "8081");
-  app.constant('Domain', "http://ec2-52-67-255-100.sa-east-1.compute.amazonaws.com");
+  app.constant('Domain', "http://cleangame.site");
 }
 
  
