@@ -15,6 +15,7 @@ http.listen(2000, function(){
 
 io.on("connection", function (client) {
     console.log('user connected');
+
       client.on("register_user", function(user){
         console.log("Usuário registrado: ", user.mail);       
         //client.emit("update", "You have connected to the server.");
@@ -45,11 +46,23 @@ io.on("connection", function (client) {
       
     
       
-      client.on("makealternative", function(room){
+      client.on("makealternative", function(dto){
           console.log("Make alternative: ");       
-          client.in(room).emit("makealternative", "");
+          client.in(dto.id).broadcast.emit("makealternative", dto);
           //client.broadcast.emit("update", name + " has joined the server.")
       });
+
+      client.on("skipalternative", function(dto){
+        console.log("Make alternative: ");       
+        client.in(dto.id).broadcast.emit("skipalternative", dto);
+        //client.broadcast.emit("update", name + " has joined the server.")
+    });
+
+      client.on("skip", function(room){
+        console.log("Skip alternative: ");       
+        client.in(room).emit("skip", "");
+        //client.broadcast.emit("update", name + " has joined the server.")
+    });
       
       client.on("gettip", function(dica){
           console.log("GET TIP: ",dica);       
