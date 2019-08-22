@@ -70,7 +70,7 @@ public class RoomResource {
 	
 	@RequestMapping(value="/{id}/ranking",method=RequestMethod.GET)
 	public ResponseEntity<RankingRoomDTO> makeRanking(@PathVariable Integer id){
-	RankingRoomDTO ranking = service.makeRanking(id);
+	    RankingRoomDTO ranking = service.makeRanking(id);
 		return ResponseEntity.ok().body(ranking);
 	}
 	
@@ -133,13 +133,20 @@ public class RoomResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
-	
+		
 	//Limitação do AngulaJS1 utilizando post para delete
 	@RequestMapping(value="/delete/{id}",method=RequestMethod.POST)
 	public ResponseEntity<?>delete(@PathVariable Integer id){
 		service.delete(id);
 		return ResponseEntity.ok().body(null);
 	}
+	
+	@RequestMapping(value="/reset/{id}",method=RequestMethod.POST)
+	public ResponseEntity<Void> reset(@PathVariable Integer id){
+       	service.reset(id);   	   
+ 		return ResponseEntity.ok().body(null);
+	}
+	
 	
 	@RequestMapping(value="/{id}/question",method=RequestMethod.POST)
 	public ResponseEntity<?>insert(@PathVariable Integer id, @RequestBody EasyQuestion question){

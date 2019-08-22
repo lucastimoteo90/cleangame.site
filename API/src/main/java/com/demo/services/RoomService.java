@@ -49,7 +49,8 @@ public class RoomService {
 	@Autowired
 	private UserService userService;
 	
-	
+	@Autowired
+	private RoomService roomService;
 	
 	
 	public List<Room> findAll() {
@@ -83,14 +84,40 @@ public class RoomService {
 		}	    
 		User user = userService.findById(userSS.getID());
 		Team team = teamService.findById(id);
-		Room room = teamService.findRoomByTeam(id);
+		Room room = teamService.findRoomByTeam(team.getId());
 	    
 		List<Answer> answers = answerService.findAnswersTeamQuestions(team, room.getQuestions());
 	
+				
 		answerService.delete(answers);	
 		
 		return room;
 	}
+	
+	public Room reset(Integer id) throws ObjectNotFoundException {
+	    UserSS userSS = UserService.authenticated();
+		if(userSS == null) {
+			throw new AuthorizationException("Token Inválido");
+		}	    
+		User user = userService.findById(userSS.getID());
+		
+		Room room = roomService.findById(id);
+	    
+		
+		List<Answer> answers = answerService.findByQuestionIn(room.getQuestions());
+		
+		System.out.println("AQQUIII...");
+		
+		for(Answer answer: answers) {
+			
+			List<Score> scores = scoreService.findByTeam(answer.getTeam());
+		    scoreService.deleteAll(scores);
+		}
+		answerService.delete(answers);	
+		
+		return room;
+	}	
+	
 	
 	public Team createTeam(Integer idRoom, String nameTeam) throws ObjectNotFoundException {
 	    UserSS userSS = UserService.authenticated();
@@ -157,7 +184,7 @@ public class RoomService {
 		Question question = questionService.findById(alternative.getQuestion());
 		Answer answer = answerService.findById(alternative.getAnswer());
 		
-		
+		Team team = answer.getTeam();
 		//System.out.println("QUESTION"+question.getMd5correct());
 	    //System.out.println("ANSWER"+answer.getQuestion().getAsk());
 		/*
@@ -175,22 +202,25 @@ public class RoomService {
 				
 		answer.setEnd(new Timestamp(System.currentTimeMillis()));
 		answerService.save(answer);
+		alternative.setMd5correct(question.getMd5correct());
 		
-		if(scoreService.findByUserAndRoom(user, question.getRoom()).size() > 0 ){
-			Score score = scoreService.findByUserAndRoom(user, question.getRoom()).get(0);
+		if(scoreService.findByTeamAndRoom(team, question.getRoom()).size() > 0 ){
+			Score score = scoreService.findByTeamAndRoom(team, question.getRoom()).get(0);
 		    score.computeScore(answer);
 		    scoreService.save(score);
 		    alternative.setScore(score);
 		}else{
-			Score score = new Score();
+			/*Score score = new Score();
 			score.setRoom(question.getRoom());
 			score.setUser(user);
+			score.setTeam(team);
 			score.setScore(0.0);
 			score.setConsecutiveHits(0);
 			score = scoreService.save(score);
 			score.computeScore(answer);
 			scoreService.save(score);
 			alternative.setScore(score);
+			*/
 		}	 
 			
 		
@@ -253,7 +283,8 @@ public class RoomService {
 		resume.setErrors(answerService.findAnswerIncorrectsTeam(team, room));
 		resume.setSkips(answerService.findAnswerSkipsTeam(team, room));
 	
-		Score score = scoreService.findByUserAndRoom(user, room).get(0);
+		//Corrigir isso aqui.
+		Score score = scoreService.findByTeamAndRoom(team, room).get(0);
 		
 		resume.setPenalites(score.getPanalites());
 		resume.setScore(score);
@@ -330,7 +361,7 @@ public class RoomService {
 		}	
 		
 		User user = userService.findById(userSS.getID());
-		//Team team = teamService.findById(id);
+		Team team = teamService.findById(id);
 		Room room = teamService.findRoomByTeam(id);		
 		
 		Integer position = 1;

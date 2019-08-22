@@ -105,6 +105,9 @@ public class AnswerService {
 		return repository.findByTeamAndQuestionIn(team, questions);
 	}
 	
+	public List<Answer> findByQuestionIn(List<Question> questions ) {
+		return repository.findByQuestionIn(questions);
+	}
 	
 	
 	public Answer findById(Integer id) {

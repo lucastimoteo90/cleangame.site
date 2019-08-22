@@ -9,7 +9,7 @@ public class AlternativeDTO {
 	private Boolean correct;
 	private Integer answer;
 	private Score score;
-	
+	private String md5correct;
 	
 	public Integer getQuestion() {
 		return question;
@@ -40,6 +40,12 @@ public class AlternativeDTO {
 	}
 	public void setScore(Score score) {
 		this.score = score;
+	}
+	public String getMd5correct() {
+		return md5correct;
+	}
+	public void setMd5correct(String md5correct) {
+		this.md5correct = md5correct;
 	}
 	
 	

@@ -29,6 +29,28 @@ public class Score {
   	private User user;
     
     @ManyToOne
+   	@JoinColumn(name="team_id")
+    @JsonIgnore
+    private Team team;
+    
+    
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Team getTeam() {
+		return team;
+	}
+
+	public void setTeam(Team team) {
+		this.team = team;
+	}
+
+	@ManyToOne
 	@JoinColumn(name="room_id")
     @JsonIgnore
 	private Room room;

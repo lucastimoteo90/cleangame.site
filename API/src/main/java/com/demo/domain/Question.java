@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -85,9 +86,9 @@ public class Question implements Serializable{
 		this.setFake3(null);
 		this.setMd5correct(null);
 		
+				
 		
-		
-		Collections.shuffle(this.getAlternatives());
+		Collections.shuffle(this.getAlternatives(),new Random(this.getId()));
 		
 		return null;
 	}

@@ -24,6 +24,7 @@ import com.demo.domain.GitClone;
 import com.demo.domain.MediumRoom;
 import com.demo.domain.Question;
 import com.demo.domain.Room;
+import com.demo.domain.Score;
 import com.demo.domain.Team;
 import com.demo.domain.User;
 import com.demo.repositories.AnswerRepository;
@@ -38,6 +39,9 @@ public class MediumRoomService {
 	@Autowired
 	private RoomRepository repository;
 
+	@Autowired 
+	private ScoreService scoreService;
+	
 	@Autowired
 	private UserService userService;
 	
@@ -92,7 +96,7 @@ public class MediumRoomService {
 
 
 		List<Question> roomQuestions = room.get().getQuestions();
-		Collections.shuffle(roomQuestions);
+		//Collections.shuffle(roomQuestions);
 		System.out.println("SALA"+room.get().getName());
 		System.out.println("SALA"+roomQuestions.size());
 
@@ -100,6 +104,27 @@ public class MediumRoomService {
 			if(question.getValid()) {
 				//Procurar se existe answer para question
 				if(answerRepository.findByTeamAndQuestion(team, question).size() == 0) {
+					//CRIA SCORE
+					if(scoreService.findByTeamAndRoom(team, room.get()).size() == 0) {
+						Score score = new Score();
+						score.setRoom(question.getRoom());
+						score.setUser(user);
+						score.setTeam(team);
+						score.setScore(0.0);
+						score.setConsecutiveHits(0);
+						score = scoreService.save(score);
+					}else {
+						Score score = scoreService.findByTeamAndRoom(team, room.get()).get(0);
+						//score.setRoom(question.getRoom());
+						//score.setUser(user);
+						//score.setTeam(team);
+						//score.setScore(0.0);
+						//score.setConsecutiveHits(0);
+						//score = scoreService.save(score);
+					}
+					
+					
+					
 					Answer newAnswer = new Answer();
 					newAnswer.setQuestion(question);
 					newAnswer.setUser(user);
@@ -112,6 +137,9 @@ public class MediumRoomService {
 					question.setTip("");
 					question.setTip2("");
 					question.setTip3("");
+					
+					
+										
 					return question;
 				}
 

@@ -33,6 +33,14 @@ public class ScoreService {
 		return repository.findByUserAndRoom(user, room);
 	}
 	
+	public List<Score> findByTeamAndRoom(Team team, Room room) {
+		return repository.findByTeamAndRoom(team, room);
+	}
+	
+	public List<Score> findByTeam(Team team) {
+		return repository.findByTeam(team);
+	}
+	
 	public List<Score> findByRoomOrderByScoreDesc(Room room){
 		return repository.findByRoomOrderByScoreDesc(room);
 	}
@@ -45,6 +53,9 @@ public class ScoreService {
       return repository.save(score);
     }		
 	
-
+    public void deleteAll(List<Score> scores) {
+        repository.deleteAll(scores);;
+     }	
+    
 
 }

@@ -18,6 +18,8 @@ public interface AnswerRepository extends JpaRepository<Answer, Integer>{
   	List<Answer>findAllByTeamAndCorrectTrue(Team team);
   	List<Answer>findAllByTeamAndCorrectFalse(Team team);
   	
+  	List<Answer> findByQuestionIn(List<Question> question);
+  	
   	List<Answer>findByUserAndQuestionNotIn(User user, List<Question> questions); 
   	
     List<Answer> findByUserAndQuestion(User user, Question question);

@@ -48,6 +48,18 @@ public class Team implements Serializable{
 	@OneToMany(mappedBy="team")
 	private List<Answer> answers = new ArrayList<>();
 	
+	public List<Score> getScores() {
+		return scores;
+	}
+
+	public void setScores(List<Score> scores) {
+		this.scores = scores;
+	}
+
+	@OneToMany(mappedBy="team")
+	@JsonIgnore
+	private List<Score> scores = new ArrayList<>();
+	
 	public Integer getId() {
 		return id;
 	}

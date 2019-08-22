@@ -14,6 +14,7 @@ import com.demo.domain.EasyQuestion;
 import com.demo.domain.EasyRoom;
 import com.demo.domain.Question;
 import com.demo.domain.Room;
+import com.demo.domain.Score;
 import com.demo.domain.Team;
 import com.demo.domain.User;
 import com.demo.repositories.AnswerRepository;
@@ -31,6 +32,9 @@ public class EasyRoomService {
 	
 	@Autowired
 	private QuestionRepository questionRepository;
+	
+	@Autowired 
+	private ScoreService scoreService;
 	
 	@Autowired
 	private EasyQuestionRepository easyQuestionRepository;
@@ -83,7 +87,25 @@ public class EasyRoomService {
 		for(Question question: roomQuestions){
 			//Procurar se existe answer para question
 		    if(answerRepository.findByTeamAndQuestion(team, question).size() == 0) {
-				Answer newAnswer = new Answer();
+		    	if(scoreService.findByTeamAndRoom(team, room.get()).size() == 0) {
+					Score score = new Score();
+					score.setRoom(question.getRoom());
+					score.setUser(user);
+					score.setTeam(team);
+					score.setScore(0.0);
+					score.setConsecutiveHits(0);
+					score = scoreService.save(score);
+				}else {
+					Score score = scoreService.findByTeamAndRoom(team, room.get()).get(0);
+					//score.setRoom(question.getRoom());
+					//score.setUser(user);
+					//score.setTeam(team);
+					////score.setScore(0.0);
+					//score.setConsecutiveHits(0);
+					//score = scoreService.save(score);
+				}
+		    	
+		    	Answer newAnswer = new Answer();
 				newAnswer.setQuestion(question);
 				newAnswer.setUser(user);
 				newAnswer.setTeam(team);
@@ -144,6 +166,7 @@ public class EasyRoomService {
 		room.getAllQuestions().add(question);
 		question.setRoom(room);
 		question.setCode("");
+		question.setFilename("");
 		question.setValid(true);
 		repository.save(room);
 		questionRepository.save(question);

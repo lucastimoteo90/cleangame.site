@@ -169,7 +169,7 @@ public class QuestionService {
 		User user = userService.findById(userSS.getID());
 		Question question = repository.findById(idQuestion).get();
         Team team = teamService.findById(idteam);
-		Score score = scoreService.findByUserAndRoom(user, question.getRoom()).get(0);
+		Score score = scoreService.findByTeamAndRoom(team, question.getRoom()).get(0);
         //Mudar pra team
 		
 		
@@ -200,10 +200,8 @@ public class QuestionService {
 		User user = userService.findById(userSS.getID());
 		Question question = repository.findById(idQuestion).get();
         Team team = teamService.findById(idteam);
-        Score score = scoreService.findByUserAndRoom(user, question.getRoom()).get(0);
-		//Mudar pra team
-		
-		
+        Score score = scoreService.findByTeamAndRoom(team, question.getRoom()).get(0);
+			
 		
 	    tip.setQuestion_id(question.getId());
 	    if(score.isGettip()) {
@@ -229,7 +227,7 @@ public class QuestionService {
 		User user = userService.findById(userSS.getID());
 		Question question = repository.findById(idQuestion).get();
         Team team = teamService.findById(idteam);
-        Score score = scoreService.findByUserAndRoom(user, question.getRoom()).get(0);
+        Score score = scoreService.findByTeamAndRoom(team, question.getRoom()).get(0);
 		//Mudar pra team
 		
 		
@@ -274,14 +272,15 @@ public class QuestionService {
 		answerRepository.save(answer);	
 		
 		
-		if(scoreService.findByUserAndRoom(user, question.getRoom()).size() > 0 ){
-			Score score = scoreService.findByUserAndRoom(user, question.getRoom()).get(0);
+		if(scoreService.findByTeamAndRoom(team, question.getRoom()).size() > 0 ){
+			Score score = scoreService.findByTeamAndRoom(team, question.getRoom()).get(0);
 		    score.computeScore(answer);
 		    scoreService.save(score);
 		}else{
 			Score score = new Score();
 			score.setRoom(question.getRoom());
 			score.setUser(user);
+			score.setTeam(team);
 			score.setScore(0.0);
 			score.setConsecutiveHits(0);
 			score = scoreService.save(score);
