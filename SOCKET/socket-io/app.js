@@ -9,8 +9,8 @@ app.get('/', function(req, res){
   res.send('server is running');
 });
 
-http.listen(2000, function(){
-   console.log('listening on port 2000');
+http.listen(8081, function(){
+   console.log('listening on port 8081');
 });
 
 io.on("connection", function (client) {

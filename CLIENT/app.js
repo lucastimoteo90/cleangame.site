@@ -69,7 +69,7 @@ app.directive('codeMirror', ['$timeout', function($timeout) {
 
 
 
-local = true;
+local = false;
 
 if(local){
   app.constant('ApiPath', "http://localhost:8080");
