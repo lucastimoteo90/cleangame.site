@@ -14,7 +14,7 @@ app.service('$SocketService', ['$http', 'ApiPath','SocketServer','SocketPort', f
 
     this.conect = function(){
         this.socket = io.connect(this.url+":"+this.port);
-
+        console.log("CONNECTOU AO SOCKET");
     }
 
     this.registerUser = function(user){
@@ -77,10 +77,26 @@ app.service('$SocketService', ['$http', 'ApiPath','SocketServer','SocketPort', f
          this.socket.emit("join_battle",batlle);
     }
 
-    this.makeAlternative = function(){
+    this.makeAlternative = function(data){
         console.log("SOCKET: MARCA UMA ALTERNATIVA");
         //this.usermail = user.mail;
-        this.socket.emit("makealternative",this.roomid);
+
+        dto = {}
+        dto.id = this.roomid
+        dto.data = data
+        
+        this.socket.emit("makealternative",dto);
+    }
+
+    this.skipAlternative = function(data){
+        console.log("SOCKET: MARCA UMA ALTERNATIVA");
+        //this.usermail = user.mail;
+
+        dto = {}
+        dto.id = this.roomid
+        dto.data = data
+        
+        this.socket.emit("skipalternative",dto);
     }
 
    

@@ -69,7 +69,7 @@ app.directive('codeMirror', ['$timeout', function($timeout) {
 
 
 
-local = false;
+local = true;
 
 if(local){
   app.constant('ApiPath', "http://localhost:8080");
@@ -78,7 +78,8 @@ if(local){
   app.constant('Domain', "localhost");
 }else{
   app.constant('ApiPath', "http://cleangame.site:8080");
-  app.constant('SocketServer', "http://cleangame.site");
+  //app.constant('ApiPath', "http://localhost:8080");
+  app.constant('SocketServer', "cleangame.site");
   app.constant('SocketPort', "8081");
   app.constant('Domain', "http://cleangame.site");
 }
@@ -123,7 +124,7 @@ app.run(function ($rootScope, $location) {
 
   //Executa ao terminar carregamento da rota
   $rootScope.$on('$locationChangeSuccess', function () { //iremos chamar essa função sempre que o endereço for alterado
-  
+    $("#modalLoading").modal('hide');
   });
 
 });
@@ -136,4 +137,3 @@ $(document).keydown(function(e){
       $('#send').click();
   }
 });
-

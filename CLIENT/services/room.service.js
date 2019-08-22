@@ -102,6 +102,20 @@ app.service('$RoomService', ['$http', 'ApiPath','$TeamService', function ($http,
     }
 
 
+    this.reset = function(){
+        var config = {
+            headers: {
+                Authorization: localStorage.getItem("cleangameToken")
+            }
+        }
+        return $http.post(ApiPath + '/rooms/reset/'+this.getActiveRoom().id,null, config).then(function (response) {
+            return response;                         
+        }).catch(function (err) {
+            console.log("Falha ao consultar dica...")
+            return err;
+        });
+    }
+
     this.findRooms = function(keyword){
         var config = {
             headers: {

@@ -63,8 +63,39 @@ app.controller('SkeletonCtrl', function ($rootScope,$routeParams, $location, $sc
         $UserService.getUserData().then(function (response) {
           if (response.status == 200) {
              $("#modalLogin").modal('hide'); 
-             getUser();
-             $('.dropdown.open').removeClass('open');             
+             //getUser();
+             $('.dropdown.open').removeClass('open');    
+             
+             $TeamService.getRoom($routeParams.inviteid).then(function (room) {
+              console.log("CARREGANDO DADADOS SALA REFERENTE AO CONVITE")
+             
+              //Adicionar uconnectionStateário ao team 
+
+              //Carrega a sconnectionStatea do convite...(multiplayer)
+              $RoomService.setActiveRoom(room);
+                           
+              team={"id":parseInt($routeParams.inviteid),"name":"","answers":null}
+              $TeamService.setActiveTeam(team);
+               
+              $rootScope.invited = true;
+
+              /**Obtem dados do usuário */
+              $UserService.getUserData().then(function (response) {
+                  /**Verifica se usuario esta logado */
+                  if (response.status == 200) {
+                    $rootScope.user = response.data;
+                    $rootScope.user.isLoged = true;
+                    $rootScope.loadMainContent("rooms");
+                  }
+              })
+
+              
+          })   
+             
+
+
+
+
           }else{
             $rootScope.user.isLoged = false;
             $rootScope.msg.errorLogin = "Falha no login, tente novamente!";
@@ -84,24 +115,36 @@ app.controller('SkeletonCtrl', function ($rootScope,$routeParams, $location, $sc
     
     
     
-    getUser();
+    
   //SUPER GAMBIARRA  
   //Se existir convite  
   if(typeof $routeParams.inviteid !== "undefined"){     
-       if(localStorage.getItem("cleangameToken") ){
-          console.log("Usuário Logado: ");
+       if(localStorage.getItem("cleangameToken")){
+          console.log("INVITED: Usuário Logado: ");
           $TeamService.getRoom($routeParams.inviteid).then(function (room) {
-              console.log("connectionStateRREGANDO DADADOS SALA REFERENTE AO CONVITE", room)
-
+              console.log("CARREGANDO DADADOS SALA REFERENTE AO CONVITE")
+             
               //Adicionar uconnectionStateário ao team 
 
               //Carrega a sconnectionStatea do convite...(multiplayer)
               $RoomService.setActiveRoom(room);
-              team={id:$routeParams.inviteid}
+                           
+              team={"id":parseInt($routeParams.inviteid),"name":"","answers":null}
               $TeamService.setActiveTeam(team);
-              
+               
               $rootScope.invited = true;
-              $rootScope.loadMainContent("rooms");
+
+              /**Obtem dados do usuário */
+              $UserService.getUserData().then(function (response) {
+                  /**Verifica se usuario esta logado */
+                  if (response.status == 200) {
+                    $rootScope.user = response.data;
+                    $rootScope.user.isLoged = true;
+                    $rootScope.loadMainContent("rooms");
+                  }
+              })
+
+              
           })          /*
           * Consulta a sala referente ao convite
           * O id do convite é o id do team
@@ -113,25 +156,14 @@ app.controller('SkeletonCtrl', function ($rootScope,$routeParams, $location, $sc
     
 
        }else{
+          $("#modalLoading").modal('hide');
           console.log("Usuário não Logado: ");
           $rootScope.loadMainContent('new-user');
 
        }
 
       //CARREGAMENTO PADRÃO;  
-  }else{
-
-  /**Uso jquery compatibilidade com bootstrap */
-  //$rootScope.loadMainContent('home');
-
-  //Carregamento padrão
-  //$rootScope.loadTemplate('./views/productsList.template.html');
-
-  //renewNavs();
-  // $rootScope.activetab = $location.path();
-  }//FECHA CARRAGAMENTO PADRAO
-
-  if(typeof $routeParams.battleid !== "undefined"){ 
+  }else if(typeof $routeParams.battleid !== "undefined"){ 
     console.log($routeParams.battleid);
     $rootScope.battle = true;
     $rootScope.battleid = $routeParams.battleid;
@@ -155,14 +187,12 @@ app.controller('SkeletonCtrl', function ($rootScope,$routeParams, $location, $sc
     $rootScope.loadMainContent("rooms");
 
    }else{
-      console.log("Usuário não Logado: ");
-      $rootScope.loadMainContent('new-user');
-
+    getUser();
    }
   
 
+   
   
-
 
 
 

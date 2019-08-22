@@ -125,9 +125,19 @@ app.controller('EasyRoomCtrl', function ($rootScope,Domain,$sce, $location, $sco
 
   /**RECEBE NOTIFICAÇÂO DE ALTERNATIVA */
   $SocketService.socket.on("makealternative", function(msg) { 
+    console.log("alternativ receiver",msg)
+    showScoreAlternative(msg.data)
     loadQuestion();    
    
     
+  })  	
+
+  
+
+  $SocketService.socket.on("skipalternative", function(msg) { 
+    console.log("RECEBENDO SKIP!!", msg)  
+    loadQuestion(); 
+    //$scope.tip = msg.tip;    
   })  	
 
   $SocketService.socket.on("gettip", function(msg) { 
@@ -202,9 +212,10 @@ app.controller('EasyRoomCtrl', function ($rootScope,Domain,$sce, $location, $sco
     })
   }
 
-  function loadQuestionSocket(){            
+  function loadQuestionSocket(data = null){            
       
     loadResume();
+    loadRanking()
     $scope.tip = null;
     $scope.panel.time = 0;  
     $EasyRoomService.getQuestion().then(function(response){
@@ -213,7 +224,7 @@ app.controller('EasyRoomCtrl', function ($rootScope,Domain,$sce, $location, $sco
        }else{
          $rootScope.loadMainContent('rooms/easy/congratulations')
        }       
-       $SocketService.makeAlternative();
+       $SocketService.makeAlternative(data);
        console.log($scope.question)
     })
   }
@@ -272,6 +283,7 @@ app.controller('EasyRoomCtrl', function ($rootScope,Domain,$sce, $location, $sco
   $scope.skip = function(){
     $QuestionService.skip($scope.question.id).then(function(response){      
       loadQuestion();
+      $SocketService.skipAlternative(response.data)
     })
   }
 
@@ -294,6 +306,64 @@ app.controller('EasyRoomCtrl', function ($rootScope,Domain,$sce, $location, $sco
   }
 
 
+  function showScoreAlternative(data){
+    $("#modalLoading").modal("hide");
+    alternative = data;
+    $rootScope.score = data.score 
+    
+    if(data.correct){
+      $("#modalMaisPontos").modal();
+      $("#maisPontos").show();
+      resto = 0;
+      efeito = setInterval(function(){
+        
+         $scope.$apply(function () {
+         if( (resto++ %2) == 0){
+          $("#maisPontos").hide();
+         }else{
+          $("#maisPontos").show();
+         }
+        })
+      },100)
+
+      setTimeout(function(){
+        $scope.$apply(function () {
+          $("#maisPontos").hide();
+          $("#modalMaisPontos").modal('hide');
+          clearInterval(efeito)
+      });        
+      },3000);
+      
+       
+    }else{
+      $("#modalMenosPontos").modal();
+      $("#menosPontos").show();
+      resto = 0;
+      efeito = setInterval(function(){
+        
+        $scope.$apply(function () {
+        if( (resto++ %2) == 0){
+          $("#menosPontos").hide();
+        }else{
+          $("#menosPontos").show();
+        }
+       })
+     },100)
+      setTimeout(function(){
+        $scope.$apply(function () {
+          $("#menosPontos").hide();
+          $("#modalMenosPontos").modal('hide');
+          clearInterval(efeito)
+      });        
+      },3000);
+      
+    }
+
+   
+     
+  }
+
+
   $scope.markAlternative = function(option){
      alternative = {};
      alternative.question = $scope.question.id;
@@ -301,61 +371,22 @@ app.controller('EasyRoomCtrl', function ($rootScope,Domain,$sce, $location, $sco
      alternative.md5answer = md5($scope.question.alternatives[option]);
 
      $QuestionService.markAlternative(alternative).then(function(response){
-      $("#modalLoading").modal("hide");
-      alternative = response.data;
-      $rootScope.score = response.data.score 
-      
-      if(response.data.correct){
-        $("#modalMaisPontos").modal();
-        $("#maisPontos").show();
-        resto = 0;
-        efeito = setInterval(function(){
-          
-           $scope.$apply(function () {
-           if( (resto++ %2) == 0){
-            $("#maisPontos").hide();
-           }else{
-            $("#maisPontos").show();
-           }
-          })
-        },100)
-
-        setTimeout(function(){
-          $scope.$apply(function () {
-            $("#maisPontos").hide();
-            $("#modalMaisPontos").modal('hide');
-            clearInterval(efeito)
-        });        
-        },3000);
-        
          
-      }else{
-        $("#modalMenosPontos").modal();
-        $("#menosPontos").show();
-        resto = 0;
-        efeito = setInterval(function(){
+        if(md5($scope.question.alternatives[0]) == response.data.md5correct){
+          $rootScope.answerCorrect = "A "+$scope.question.alternatives[0];
+        }else if(md5($scope.question.alternatives[1]) == response.data.md5correct){
+          $rootScope.answerCorrect = "B "+$scope.question.alternatives[1];          
+        }else if(md5($scope.question.alternatives[2]) == response.data.md5correct){
+          $rootScope.answerCorrect = "C "+$scope.question.alternatives[2];          
+        }else{
+          $rootScope.answerCorrect = "D "+$scope.question.alternatives[3];          
+        } 
           
-          $scope.$apply(function () {
-          if( (resto++ %2) == 0){
-            $("#menosPontos").hide();
-          }else{
-            $("#menosPontos").show();
-          }
-         })
-       },100)
-        setTimeout(function(){
-          $scope.$apply(function () {
-            $("#menosPontos").hide();
-            $("#modalMenosPontos").modal('hide');
-            clearInterval(efeito)
-        });        
-        },3000);
-        
-      }
 
-      loadQuestionSocket(); 
-      loadQuestion(); 
-       
+         showScoreAlternative(response.data)
+
+         loadQuestionSocket(response.data); 
+         loadQuestion(); 
      })
   }
 

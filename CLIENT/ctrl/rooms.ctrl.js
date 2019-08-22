@@ -64,8 +64,7 @@ app.controller('RoomsCtrl', function ($rootScope, $location, $scope, $RoomServic
 
 
 
-  getUserRoomsAdmin();
-  getUserRoomsMember()
+  
 
   $scope.openViewNewRoom = function () {
     $("#modalNewRoom").modal('show');
@@ -94,7 +93,12 @@ app.controller('RoomsCtrl', function ($rootScope, $location, $scope, $RoomServic
   }
 
   $scope.reset = function(room){
-
+    $("#modalLoading").modal();
+    $RoomService.setActiveRoom(room);
+    $RoomService.reset().then(function(response){
+      console.log(response.data);
+      $("#modalLoading").modal('hide');
+    })
   }
 
   $scope.createNewEasyRoom = function(){
@@ -143,6 +147,8 @@ app.controller('RoomsCtrl', function ($rootScope, $location, $scope, $RoomServic
 
 
   $scope.accessRoom = function(room){
+    console.log("DADOS DA SALA");
+    console.log(room);
     $RoomService.setActiveRoom(room);
     $("#modalLoading").modal(); 
     //Criar uma seção ou team
@@ -153,7 +159,7 @@ app.controller('RoomsCtrl', function ($rootScope, $location, $scope, $RoomServic
       $("#modalLoading").modal('hide');
       if(room.type == "EASY"){
         $rootScope.loadMainContent('rooms/easy/room');
-      }if(room.type == "MEDIUM"){
+      }else if(room.type == "MEDIUM"){
         $rootScope.loadMainContent('rooms/medium/room')
       }else{
         $rootScope.loadMainContent('rooms/hard/room');
@@ -202,6 +208,9 @@ app.controller('RoomsCtrl', function ($rootScope, $location, $scope, $RoomServic
     roomSubscribe(room);
   }
 
+
+  getUserRoomsAdmin();
+  getUserRoomsMember()
   //Carregamento padrão
   //$rootScope.loadTemplate('./views/productsList.template.html');
 

@@ -67,6 +67,7 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
            console.log("AQUI", $scope.resume.position)     
         }
       });
+     
       //alert($scope.progress)
     })
   }
@@ -111,9 +112,10 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
     })
   }
 
-  function loadQuestionSocket(){            
+  function loadQuestionSocket(data = null){            
       
     loadResume();
+    loadRanking()
     $scope.tip = null;
     $scope.panel.time = 0;  
     $MediumRoomService.getQuestion().then(function(response){
@@ -122,7 +124,7 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
        }else{
          $rootScope.loadMainContent('rooms/medium/congratulations')
        }       
-       $SocketService.makeAlternative();
+       $SocketService.makeAlternative(data);
        console.log($scope.question)
     })
   }  
@@ -190,8 +192,9 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
 
   $scope.skip = function(){
     $QuestionService.skip($scope.question.id).then(function(response){      
-      //loadQuestionSocket();
+      loadQuestionSocket();
       loadQuestion();
+      $SocketService.skipAlternative(response.data)
     })
   }
 
@@ -290,13 +293,15 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
     
 
    //Função ativa modo multiplayer na sala
-   function multiplayer(){
+  function multiplayer(){
     //Funções socketio
     //conecta usuário servidor
   $SocketService.conect();
+  //console.log("CONEXÃO AO SOCKET")
 
   //Registra usuário na sala
   $SocketService.registerUser($rootScope.user);
+  console.log("REGISTRA USUÀRIO NA SALA")
   $SocketService.registerUserRoom($TeamService.getActiveTeam().id);
  
   
@@ -371,8 +376,9 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
 
   /**RECEBE NOTIFICAÇÂO DE ALTERNATIVA */
   $SocketService.socket.on("makealternative", function(msg) { 
-    loadQuestion();    
-    
+    console.log("ALTERNATIVA DATA", msg);
+    showScoreAlternative(msg.data)
+    loadQuestion();       
   })  	
 
   $SocketService.socket.on("gettip", function(msg) { 
@@ -385,6 +391,65 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
 
   $rootScope.score = {}
   
+  function showScoreAlternative(data){
+    $("#modalLoading").modal("hide");
+    alternative = data;
+    $rootScope.score = data.score 
+    
+    if(data.correct){
+      $("#modalMaisPontos").modal();
+      $("#maisPontos").show();
+      resto = 0;
+      efeito = setInterval(function(){
+        
+         $scope.$apply(function () {
+         if( (resto++ %2) == 0){
+          $("#maisPontos").hide();
+         }else{
+          $("#maisPontos").show();
+         }
+        })
+      },100)
+
+      setTimeout(function(){
+        $scope.$apply(function () {
+          $("#maisPontos").hide();
+          $("#modalMaisPontos").modal('hide');
+          clearInterval(efeito)
+      });        
+      },3000);
+      
+       
+    }else{
+      $("#modalMenosPontos").modal();
+      $("#menosPontos").show();
+      resto = 0;
+      efeito = setInterval(function(){
+        
+        $scope.$apply(function () {
+        if( (resto++ %2) == 0){
+          $("#menosPontos").hide();
+        }else{
+          $("#menosPontos").show();
+        }
+       })
+     },100)
+      setTimeout(function(){
+        $scope.$apply(function () {
+          $("#menosPontos").hide();
+          $("#modalMenosPontos").modal('hide');
+          clearInterval(efeito)
+      });        
+      },3000);
+      
+    }
+
+   
+     
+  }
+
+
+
   $scope.markAlternative = function(option){
     alternative = {};
     alternative.question = $scope.question.id;
@@ -392,59 +457,19 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
     alternative.md5answer = md5($scope.question.alternatives[option]);
 
     $QuestionService.markAlternative(alternative).then(function(response){
-      $("#modalLoading").modal("hide");
-      alternative = response.data;
-      $rootScope.score = response.data.score 
-     
-      if(response.data.correct){
-        $("#modalMaisPontos").modal();
-        $("#maisPontos").show();
-        resto = 0;
-        efeito = setInterval(function(){
-          
-           $scope.$apply(function () {
-           if( (resto++ %2) == 0){
-            $("#maisPontos").hide();
-           }else{
-            $("#maisPontos").show();
-           }
-          })
-        },100)
-
-        setTimeout(function(){
-          $scope.$apply(function () {
-            $("#maisPontos").hide();
-            $("#modalMaisPontos").modal('hide');
-            clearInterval(efeito)
-        });        
-        },3000);
-        
-         
+      if(md5($scope.question.alternatives[0]) == response.data.md5correct){
+        $rootScope.answerCorrect = "A "+$scope.question.alternatives[0];
+      }else if(md5($scope.question.alternatives[1]) == response.data.md5correct){
+        $rootScope.answerCorrect = "B "+$scope.question.alternatives[1];
+      }else if(md5($scope.question.alternatives[2]) == response.data.md5correct){
+        $rootScope.answerCorrect = "C "+$scope.question.alternatives[2];
       }else{
-        $("#modalMenosPontos").modal();
-        $("#menosPontos").show();
-        resto = 0;
-        efeito = setInterval(function(){
-          
-          $scope.$apply(function () {
-          if( (resto++ %2) == 0){
-            $("#menosPontos").hide();
-          }else{
-            $("#menosPontos").show();
-          }
-         })
-       },100)
-        setTimeout(function(){
-          $scope.$apply(function () {
-            $("#menosPontos").hide();
-            $("#modalMenosPontos").modal('hide');
-            clearInterval(efeito)
-        });        
-        },3000);
-        
-      }
+        $rootScope.answerCorrect = "D "+$scope.question.alternatives[3];
+      } 
+      
+      showScoreAlternative(response.data)
 
-      loadQuestionSocket(); 
+      loadQuestionSocket(response.data); 
       loadQuestion();           
       
     })
