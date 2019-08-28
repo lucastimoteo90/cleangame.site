@@ -33,7 +33,7 @@
         <h2><img src="./lib/img/chat.png" style="width: 30px"> Chat:</h2>
         <div id="console" class="well" style="font-size: 8pt; white-space: normal" ng-bind-html="consoleChat"> </div>
        <form class="well form-inline" onsubmit="return false;">
-        <input ng-model="sendMsg"  class="input-xlarge" type="text" placeholder="Type something..."/>
+        <input ng-model="sendMsg" id="sendMsg"  class="input-xlarge" type="text" placeholder="Type something..."/>
         <button type="button" ng-click="sendChatMensage(sendMsg)" class="btn" id="send">Send</button>                           
       </form>
     </div>

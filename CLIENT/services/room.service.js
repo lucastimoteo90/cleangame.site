@@ -116,6 +116,20 @@ app.service('$RoomService', ['$http', 'ApiPath','$TeamService', function ($http,
         });
     }
 
+    this.addUserTeam = function(team_id){
+        var config = {
+            headers: {
+                Authorization: localStorage.getItem("cleangameToken")
+            }
+        }
+        return $http.post(ApiPath + '/rooms/adduser/'+team_id,null, config).then(function (response) {
+            return response;                         
+        }).catch(function (err) {
+            console.log("Falha ao vincular team")
+            return err;
+        });
+    }
+
     this.findRooms = function(keyword){
         var config = {
             headers: {

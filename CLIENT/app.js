@@ -69,12 +69,12 @@ app.directive('codeMirror', ['$timeout', function($timeout) {
 
 
 
-local = false;
+local = true;
 
 if(local){
   app.constant('ApiPath', "http://localhost:8080");
   app.constant('SocketServer', "http://localhost");
-  app.constant('SocketPort', "2000");
+  app.constant('SocketPort', "8081");
   app.constant('Domain', "localhost");
 }else{
   app.constant('ApiPath', "http://cleangame.site:8080");
@@ -135,5 +135,6 @@ app.run(function ($rootScope, $location) {
 $(document).keydown(function(e){
   if(e.keyCode == 13) {
       $('#send').click();
+      $('#sendMsg').val('')
   }
 });

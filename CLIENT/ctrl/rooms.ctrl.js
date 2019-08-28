@@ -21,6 +21,11 @@ app.controller('RoomsCtrl', function ($rootScope, $location, $scope, $RoomServic
   //Verifica se existe convite 
   if($rootScope.invited){
     $rootScope.loadMainContent("rooms/"+$RoomService.getActiveRoom().type.toLowerCase()+'/room');
+
+    /**Add usuário no time*/  
+    $RoomService.addUserTeam($TeamService.getActiveTeam().id)
+
+
   }
 
   //Verifica se existe batalha 

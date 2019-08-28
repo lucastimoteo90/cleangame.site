@@ -377,6 +377,16 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
   /**RECEBE NOTIFICAÇÂO DE ALTERNATIVA */
   $SocketService.socket.on("makealternative", function(msg) { 
     console.log("ALTERNATIVA DATA", msg);
+    console.log("alternativ receiver",msg)
+    if(md5($scope.question.alternatives[0]) == msg.data.md5correct){
+      $rootScope.answerCorrect = "A "+$scope.question.alternatives[0];
+    }else if(md5($scope.question.alternatives[1]) == msg.data.md5correct){
+      $rootScope.answerCorrect = "B "+$scope.question.alternatives[1];          
+    }else if(md5($scope.question.alternatives[2]) == msg.data.md5correct){
+      $rootScope.answerCorrect = "C "+$scope.question.alternatives[2];          
+    }else{
+      $rootScope.answerCorrect = "D "+$scope.question.alternatives[3];          
+    } 
     showScoreAlternative(msg.data)
     loadQuestion();       
   })  	
@@ -417,7 +427,7 @@ app.controller('MediumRoomCtrl', function ($rootScope,Domain,$sce, $location, $i
           $("#modalMaisPontos").modal('hide');
           clearInterval(efeito)
       });        
-      },3000);
+      },5000);
       
        
     }else{

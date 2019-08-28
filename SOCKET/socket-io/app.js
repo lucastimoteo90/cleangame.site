@@ -73,6 +73,17 @@ io.on("connection", function (client) {
       client.on("sendchatmsg", function(mensagem){
           console.log("SEND CHAT MENSAGE: ",mensagem);       
           client.in(mensagem.sala).emit("sendchatmsg", mensagem);
+
+          //Salvar msg enviada....
+          var fs = require('fs');
+          fs.writeFile("chat.log", JSON.stringify(mensagem)+'\n',{flag: 'a'},function(error){
+              console.log(error);
+          })
+          
+          
+          
+          
+
           //client.broadcast.emit("update", name + " has joined the server.")
       });  
       

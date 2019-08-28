@@ -115,10 +115,7 @@ public class RoomResource {
 	public ResponseEntity<Team> createTeam(@PathVariable Integer id, @RequestBody Team team){
 		return ResponseEntity.ok().body(service.createTeam(id, team.getName()));
 	}
-	
-	
-	
-	
+		
 	@RequestMapping(value="/easy",method=RequestMethod.POST)
 	public ResponseEntity<EasyRoom> insert(@RequestBody EasyRoom room){
 		room = easyRoomService.insert(room);
@@ -132,8 +129,7 @@ public class RoomResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(room.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
-	
-		
+			
 	//Limitação do AngulaJS1 utilizando post para delete
 	@RequestMapping(value="/delete/{id}",method=RequestMethod.POST)
 	public ResponseEntity<?>delete(@PathVariable Integer id){
@@ -161,10 +157,12 @@ public class RoomResource {
 		return ResponseEntity.ok().body(room.getQuestions());
 	}
 	
-	
-
-	
-	
+	@RequestMapping(value="/adduser/{team_id}",method=RequestMethod.POST)
+	public ResponseEntity<Team> addUserTeam(@PathVariable Integer team_id){
+		Team team = service.addUserTeam(team_id);
+					
+		return ResponseEntity.ok().body(team);
+	}
 	
 	
 }

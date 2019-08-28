@@ -188,7 +188,7 @@
                                <div class="col-12" style="text-align: center">
                                                  
                                         <ul class="list-group" ng-repeat="r in ranking track by $index" style="text-align: left" >
-                                            <li ng-if="user.mail != r.email"class="list-group-item list-group-item" style=""><span style="font-size: 12pt"  class="badge badge-primary badge-pill">{{r.position}}º</span>  {{r.name}} <span style="float: right">Pontos: {{r.score}}</span></li>
+                                            <li ng-if="user.mail != r.email"class="list-group-item list-group-item" style=""><span style="font-size: 12pt"  class="badge badge-primary badge-pill">{{r.position}}º</span>  <span>{{r.name}}</span> <span style="float: right">Pontos: {{r.score}}</span></li>
                                             <li ng-if="user.mail == r.email" class="list-group-item list-group-item-success active" style="font-weight: bold"><span style="font-size: 12pt" class="badge badge-warning badge-pill">{{r.position}}º</span> {{r.name}} <span style="float: right">Pontos: {{r.score}}</li>
                                            
                                             

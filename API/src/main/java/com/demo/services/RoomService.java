@@ -119,6 +119,33 @@ public class RoomService {
 	}	
 	
 	
+	public Team addUserTeam(Integer team_id) {
+		UserSS userSS = UserService.authenticated();
+		if (userSS == null) {
+			throw new AuthorizationException("Token Inválido");
+		}
+		User user = userService.findById(userSS.getID());
+		Team team = teamService.findById(team_id);
+		
+		boolean lock = false;
+		for(User user_tmp: team.getTeamUsers()){
+			if(user_tmp.getId() == user.getId()) {
+				lock = true;
+			}
+		}
+		
+		if(!lock) {
+			team.getTeamUsers().add(user);
+		}
+		
+		System.out.println("AQUI");
+		teamService.save(team);
+		
+		
+
+		return null;
+	}
+
 	public Team createTeam(Integer idRoom, String nameTeam) throws ObjectNotFoundException {
 	    UserSS userSS = UserService.authenticated();
 		if(userSS == null) {
@@ -163,11 +190,6 @@ public class RoomService {
 			
 			return team;
 		}
-		
-		//List<Answer> answers = answerService.findAnswersUserQuestions(user, room.getQuestions());
-	
-		//answerService.delete(answers);	
-		
 		
 	}
 	
@@ -366,15 +388,25 @@ public class RoomService {
 		
 		Integer position = 1;
 		for(Score score: scoreService.findByRoomOrderByScoreDesc(room)){
+		  
+		  String names = "\n";	
+		  for(User userTeam: score.getTeam().getTeamUsers()){
+			  System.out.println("AQUI...");
+			  names = names+userTeam.getMail()+" \n ";
+		  }
+		  
+			
 		  User userScore = score.getUser();	
+		  
+		  
 		  UserRankingDTO userDTO = new UserRankingDTO();
 		  
 		  userDTO.setEmail(userScore.getMail());
-		  userDTO.setName(userScore.getName());
+		  userDTO.setName(names);
 		  userDTO.setScore(score.getScore());
 		  userDTO.setPosition(position++);
 		  
-		   ranking.getUsersRankingDTO().add(userDTO);
+		  ranking.getUsersRankingDTO().add(userDTO);
 		}
 	
 		

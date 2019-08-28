@@ -55,7 +55,7 @@ app.service('$SocketService', ['$http', 'ApiPath','SocketServer','SocketPort', f
     
 
     this.sendChatMessage = function(msg){
-        console.log("SOCKET: EXIBE DICA");
+        console.log("SOCKET: envia msg");
         mensagem = {}
         mensagem.sala = this.roomid;
         mensagem.usermail = this.usermail;

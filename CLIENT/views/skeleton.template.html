@@ -70,12 +70,18 @@
 <div id="modalMenosPontos" class="modal" tabindex="-1" role="dialog" >
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-body"style="text-align: center; height: 100pt;">
-        <spam id="menosPontos" style="display: none; font-size: 30pt; color:red">
-          {{score.points}} pts<br>
-          {{answerCorrect}}
+      <div class="modal-body"style="text-align: center; min-height: 200pt;">
+        <span style="text-align: left; font-size: 15pt">
+           Resposta correta: {{ answerCorrect }}
+        </span>      
+        <br><br><br><br>
+        <spam id="menosPontos" style="min-height: 100pt; display: none; font-size: 50pt; color:red">
+          {{score.points}} pts
         </spam>
+
+
       </div>
+      
     </div>
   </div>
 </div>
