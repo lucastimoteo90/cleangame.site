@@ -390,23 +390,26 @@ public class RoomService {
 		for(Score score: scoreService.findByRoomOrderByScoreDesc(room)){
 		  
 		  String names = "\n";	
-		  for(User userTeam: score.getTeam().getTeamUsers()){
-			  System.out.println("AQUI...");
-			  names = names+userTeam.getMail()+" \n ";
+		  if(score.getTeam() != null) {
+			  for(User userTeam: score.getTeam().getTeamUsers()){
+				  System.out.println("AQUI...");
+				  names = names+userTeam.getMail()+" \n ";
+			  }
+			  
+				
+			  User userScore = score.getUser();	
+			  
+			  
+			  UserRankingDTO userDTO = new UserRankingDTO();
+			  
+			  userDTO.setEmail(userScore.getMail());
+			  userDTO.setName(names);
+			  userDTO.setScore(score.getScore());
+			  userDTO.setPosition(position++);
+			  
+			  ranking.getUsersRankingDTO().add(userDTO);  
 		  }
 		  
-			
-		  User userScore = score.getUser();	
-		  
-		  
-		  UserRankingDTO userDTO = new UserRankingDTO();
-		  
-		  userDTO.setEmail(userScore.getMail());
-		  userDTO.setName(names);
-		  userDTO.setScore(score.getScore());
-		  userDTO.setPosition(position++);
-		  
-		  ranking.getUsersRankingDTO().add(userDTO);
 		}
 	
 		
